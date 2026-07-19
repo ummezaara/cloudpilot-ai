@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 220 33% 6%;
+    --foreground: 210 20% 96%;
+
+    --card: 220 30% 9%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 220 30% 8%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 36 100% 50%;
+    --primary-foreground: 220 33% 6%;
+
+    --secondary: 220 25% 14%;
+    --secondary-foreground: 210 20% 96%;
+
+    --muted: 220 25% 13%;
+    --muted-foreground: 217 15% 65%;
+
+    --accent: 220 25% 16%;
+    --accent-foreground: 210 20% 96%;
+
+    --destructive: 350 89% 60%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 36 100% 50%;
+
+    /* Architecture category colors — shared with the Mermaid diagram
+       color-coding used inside the product itself (see PRD §15) */
+    --category-compute: 36 100% 50%;
+    --category-network: 217 91% 65%;
+    --category-storage: 158 64% 52%;
+    --category-security: 350 89% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  /* Dashboard result grid. Mobile-first: stacks naturally and the page
+     scrolls. At 1024px+ (lg) it becomes a 3-row widget layout — a compact
+     metrics row, a full-width diagram row, then a detail row — closer to
+     an AWS Console / Vercel dashboard structure. Rows are `auto`-sized to
+     their content, so the page grows and scrolls naturally after
+     generation instead of being clipped to a fixed viewport budget.
+     min-width: 0 on every track/item is still required — without it, long
+     unbreakable content (Terraform code, diagram labels) can stretch the
+     grid wider than the viewport. */
+  .dashboard-grid {
+    display: grid;
+    min-width: 0;
+    gap: 0.75rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "services"
+      "cost"
+      "diagram"
+      "explanation"
+      "terraform";
+  }
+
+  @media (min-width: 1024px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-rows: auto auto auto;
+      grid-template-areas:
+        "services services cost cost"
+        "diagram diagram diagram diagram"
+        "explanation explanation terraform terraform";
+    }
+  }
+
+  .area-services,
+  .area-cost,
+  .area-diagram,
+  .area-explanation,
+  .area-terraform {
+    min-width: 0;
+  }
+
+  .area-services {
+    grid-area: services;
+  }
+  .area-cost {
+    grid-area: cost;
+  }
+  .area-diagram {
+    grid-area: diagram;
+  }
+  .area-explanation {
+    grid-area: explanation;
+  }
+  .area-terraform {
+    grid-area: terraform;
+  }
+}
+
+@layer utilities {
+  .bg-blueprint {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.6) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.6) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .bg-blueprint-fade {
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
